@@ -1,0 +1,6 @@
+{
+  "name": "ECHOES — The Time-Loop Mystery",
+  "description": "An atmospheric, story-driven time-loop mystery game where you investigate an old research facility across repeating 10-minute loops.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,60 @@
+{
+  "puzzles": [
+    {
+      "id": "PUZZLE_A_DRAWER",
+      "room": "SECURITY_OFFICE",
+      "name": "Security Desk Combination Drawer",
+      "description": "A heavy steel lockbox drawer secured with a 4-digit mechanical rotary tumbler.",
+      "solution": "7490",
+      "hints": [
+        "Inspect the Security Log on the desk and look at the frozen clock on the wall.",
+        "The guard's log states: 'Shift lock code is set to the mirror minute of incident time plus our sector prefix 7'.",
+        "The wall clock stopped exactly at 09:47. The sector prefix is 7, and the minute hands point to 47 inverted (mirror 490). The code is 7490."
+      ],
+      "rewardEvidenceId": "EVID_KEYCARD_ALPHA",
+      "rewardMessage": "The lock clicks open. Inside lies Keycard Alpha and an old magnetic audio reel labeled 'Sterling - Loop Log 01'."
+    },
+    {
+      "id": "PUZZLE_B_SPECIMEN",
+      "room": "RESEARCH_LAB",
+      "name": "Chrono-Resonance Specimen Array",
+      "description": "Three pressurized containment cylinders holding temporal isotopes: Chronite (Alpha), Flux-Core (Gamma), and Tachyon (Beta). They must be energized in order of atomic decay rate to stabilize the containment field.",
+      "solution": "ALPHA,GAMMA,BETA",
+      "hints": [
+        "Check Dr. Evelyn Vane's handwritten lab notes on the corkboard beside the centrifuge.",
+        "The note reads: 'Always calibrate starting with the highest temporal half-life (Chronite-Alpha), followed by the dampening field (Flux-Gamma), ending with the volatile particle (Tachyon-Beta)'.",
+        "Select the cylinders in the order: Alpha -> Gamma -> Beta."
+      ],
+      "rewardEvidenceId": "EVID_RESONANCE_DATA",
+      "rewardMessage": "The chronometric coils stabilize with a harmonious hum! The magnetic seal on the Observation Corridor bulkhead releases."
+    },
+    {
+      "id": "PUZZLE_C_ARCHIVE",
+      "room": "ARCHIVE_ROOM",
+      "name": "Project Chronos Classified Vault",
+      "description": "A reinforced archival vault containing the restricted incident dossiers. The alphanumeric keypad requires an authorization code.",
+      "solution": "ASTRA-842",
+      "hints": [
+        "Look at the project report index card on the reading table and the ultraviolet lamp imprint.",
+        "The classification prefix is 'ASTRA' and the safe index references Incident File 84, sub-clause 2.",
+        "Combine the prefix and the numbers: ASTRA-842."
+      ],
+      "rewardEvidenceId": "EVID_STERLING_CONFESSION",
+      "rewardMessage": "The heavy vault door swings open with a low hiss. Inside is the classified dossier on Dr. Arthur Sterling's secret contingency plan."
+    },
+    {
+      "id": "PUZZLE_D_TIMELINE",
+      "room": "CONTROL_ROOM",
+      "name": "Temporal Alignment Sequencer",
+      "description": "The central timeline terminal requires reconstructing the true sequence of events that triggered the 10-minute recursion loop at 09:47.",
+      "solution": "EVENT_1_EXPERIMENT,EVENT_2_POWER_SPIKE,EVENT_3_STERLING_OVERRIDE,EVENT_4_VANE_SABOTAGE,EVENT_5_FIELD_COLLAPSE",
+      "hints": [
+        "Review your investigation notebook under the Timeline and Transcripts tabs.",
+        "The timeline began with the Tachyon Containment Test, followed by the power surge, Sterling's manual lock, Vane's attempt to cut the core, and finally the resonance collapse at 09:47.",
+        "The correct chronological order is: 1. Experiment Initiation -> 2. Core Power Spike -> 3. Sterling System Override -> 4. Vane Emergency Scram -> 5. Temporal Field Collapse."
+      ],
+      "rewardEvidenceId": "EVID_CHRONOS_KEY",
+      "rewardMessage": "Timeline sequence verified! The Master Override Terminal is unlocked. The final choices for the facility's fate are now available."
+    }
+  ]
+}

@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ECHOES — The Time-Loop Mystery</title>
+    <meta name="description" content="An atmospheric, story-driven time-loop mystery game where you investigate an old research facility across repeating 10-minute loops." />
+    <meta property="og:title" content="ECHOES — The Time-Loop Mystery" />
+    <meta property="og:description" content="An atmospheric, story-driven time-loop mystery game where you investigate an old research facility across repeating 10-minute loops." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+  </head>
+  <body>
+    <!-- ===================================================================
+         VIEW 1: TITLE SCREEN & MAIN MENU
+         =================================================================== -->
+    <main id="title-screen" class="view-screen">
+      <div class="title-container">
+        <div class="title-logo-lockup">
+          <h1>ECHOES</h1>
+          <p class="title-tagline">Some moments refuse to end.</p>
+          <div class="title-clock-frozen">
+            <span class="clock-dot"></span>
+            <span class="font-mono text-xs text-amber-300 tracking-widest font-semibold">FACILITY CHRONOMETER: 09:47:12 AM</span>
+          </div>
+        </div>
+
+        <div class="title-menu-actions">
+          <button type="button" id="btn-new-game" class="btn-primary-menu btn-accent">
+            New Investigation
+          </button>
+          <button type="button" id="btn-continue-game" class="btn-primary-menu" disabled>
+            Continue Investigation
+          </button>
+          <button type="button" id="btn-how-to-play" class="btn-primary-menu">
+            How to Play
+          </button>
+          <button type="button" id="btn-credits" class="btn-primary-menu">
+            Credits
+          </button>
+        </div>
+
+        <div class="mt-8 flex items-center justify-center">
+          <div id="backend-status-pill" tabindex="0" role="button" aria-label="Backend status">
+            <!-- Dynamic server status rendered via api.js -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===================================================================
+         VIEW 2: ACTIVE GAMEPLAY SCREEN
+         =================================================================== -->
+    <section id="game-screen" class="view-screen hidden">
+      <!-- HUD Top Bar -->
+      <header class="game-top-bar">
+        <div class="flex items-center gap-4">
+          <span class="hud-brand">ECHOES</span>
+          <span id="hud-loop-counter" class="font-mono text-xs px-2.5 py-1 rounded bg-slate-800 text-teal-300 border border-slate-700">
+            LOOP 01
+          </span>
+        </div>
+
+        <div class="hud-metrics">
+          <div class="hud-timer-badge">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-slate-400 font-mono uppercase">LOOP TIMELINE:</span>
+              <span id="hud-timer-display" class="time-val font-mono">10:00</span>
+            </div>
+            <div class="hud-timer-progress-bar">
+              <div id="hud-timer-progress" class="h-1 bg-teal-400" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <button type="button" id="btn-pause-game" class="px-3 py-1 text-xs font-mono bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700">
+            PAUSE
+          </button>
+
+          <button type="button" id="btn-toggle-audio" class="px-3 py-1 text-xs font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700">
+            AUDIO: OFF
+          </button>
+
+          <button type="button" id="btn-force-reset" class="px-3 py-1 text-xs font-mono bg-rose-950/70 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded">
+            RESET LOOP
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Game Layout (Room Viewport + Sidebar) -->
+      <div class="game-layout">
+        <!-- Room Viewport -->
+        <div class="room-viewport">
+          <div class="room-header flex items-start justify-between">
+            <div>
+              <div id="room-banner-sector" class="room-sector-kicker">Sector 7 — Ground Annex</div>
+              <h2 id="room-banner-title" class="room-title">Security Office</h2>
+              <p id="room-banner-desc" class="room-description">A dim watch station smelling of stale coffee and vacuum tubes.</p>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" id="btn-open-map" class="px-3 py-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded flex items-center gap-1.5">
+                <span>Facility Map</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive SVG Room Illustration Scene -->
+          <div id="room-scene-container" class="scene-canvas-box flex-1 min-h-[360px] flex items-center justify-center">
+            <!-- Dynamic SVG injected via rooms.js -->
+          </div>
+
+          <!-- Adjacent Portals Navigation -->
+          <div id="room-adjacent-nav" class="mt-3">
+            <!-- Adjacent doorways injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Sidebar Panel -->
+        <aside class="game-sidebar">
+          <!-- Active Objective Card -->
+          <div class="p-3.5 bg-slate-900/90 border border-slate-800 rounded">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-teal-400 mb-1">Current Objective</div>
+            <p id="hud-active-objective" class="text-xs text-slate-200 leading-relaxed">
+              Decipher the 4-digit code to open the security drawer in the Security Office.
+            </p>
+          </div>
+
+          <!-- Evidence Summary Card & Notebook Trigger -->
+          <div class="p-3.5 bg-slate-900/90 border border-slate-800 rounded">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-200">Investigation Dossier</span>
+              <span id="hud-evidence-count" class="font-mono text-xs text-teal-400">1/12</span>
+            </div>
+            <p class="text-xs text-slate-400 mb-3">All permanent discoveries survive timeline collapse and saved sessions.</p>
+            <button type="button" id="btn-open-notebook" class="w-full py-2 text-xs bg-teal-950 hover:bg-teal-900 border border-teal-600/70 text-teal-300 font-medium rounded transition-colors">
+              Open Notebook (Press 'N')
+            </button>
+          </div>
+
+          <!-- Developer / Accessibility Options -->
+          <div class="p-3 bg-slate-950 border border-slate-800/80 rounded mt-auto">
+            <div class="text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-2">Testing & Accessibility</div>
+            <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-400 hover:text-slate-200">
+              <input type="checkbox" id="dev-timer-toggle" class="accent-teal-500" />
+              <span>Fast 2-Minute Loop (Dev Testing)</span>
+            </label>
+            <div class="text-[10px] text-slate-500 mt-1">Shortens loop timer from 10 minutes to 2 minutes for rapid testing of resets and evidence retention.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 3: ENDING EPILOGUE SCREEN
+         =================================================================== -->
+    <section id="ending-screen" class="view-screen hidden">
+      <div class="title-container max-w-3xl mx-auto my-auto p-8 bg-slate-950 border border-slate-800 rounded-lg shadow-2xl">
+        <div class="text-xs font-mono text-teal-400 uppercase tracking-widest mb-1">TIMELINE RESOLUTION COMPLETE</div>
+        <h1 id="ending-screen-title" class="text-2xl md:text-3xl font-extrabold text-slate-100 mb-1">Ending 1 — Break The Loop</h1>
+        <div id="ending-screen-subtitle" class="text-sm font-semibold text-amber-400 mb-4">Severing Spacetime</div>
+        
+        <p id="ending-screen-narrative" class="text-sm text-slate-300 leading-relaxed text-left p-4 bg-slate-900/80 border border-slate-800 rounded mb-6">
+          <!-- Narrative injected dynamically -->
+        </p>
+
+        <!-- Final Statistics -->
+        <div class="grid grid-cols-3 gap-3 w-full mb-6 text-center">
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+            <div class="text-[11px] text-slate-400 font-mono">LOOPS OCCURRED</div>
+            <div id="ending-stat-loops" class="text-lg font-bold text-teal-400 font-mono">03</div>
+          </div>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+            <div class="text-[11px] text-slate-400 font-mono">CLUES RECOVERED</div>
+            <div id="ending-stat-evidence" class="text-lg font-bold text-teal-400 font-mono">11/12</div>
+          </div>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+            <div class="text-[11px] text-slate-400 font-mono">PUZZLES SOLVED</div>
+            <div id="ending-stat-puzzles" class="text-lg font-bold text-teal-400 font-mono">4/4</div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-replay-game" class="btn-primary-menu btn-accent w-full max-w-xs">
+          Replay Investigation
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         MODALS & DIALOG OVERLAYS
+         =================================================================== -->
+
+    <!-- 1. Object Inspection Modal -->
+    <div id="inspection-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="flex items-center gap-2">
+            <span id="inspect-modal-new-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-600 hidden">NEW EVIDENCE</span>
+            <span id="inspect-modal-category" class="text-[10px] font-mono text-slate-400">OBSERVATION</span>
+          </div>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE</button>
+        </div>
+        <div class="modal-body">
+          <h3 id="inspect-modal-title" class="text-base font-bold text-slate-100 mb-2">Area Examination</h3>
+          <p id="inspect-modal-desc" class="text-xs text-slate-300 leading-relaxed mb-3"></p>
+          <div id="inspect-modal-quote" class="text-xs text-amber-200/90 italic p-3 bg-slate-950 border-l-2 border-amber-500 rounded hidden"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-close px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 rounded">
+            Continue Investigation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Interactive Puzzle Modal -->
+    <div id="puzzle-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="puzzle-modal-title" class="modal-title">Puzzle Mechanism</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CANCEL</button>
+        </div>
+        <div class="modal-body">
+          <p id="puzzle-modal-desc" class="text-xs text-slate-400 mb-4"></p>
+          <div id="puzzle-feedback" class="puzzle-feedback-box hidden mb-3"></div>
+          <div id="puzzle-content">
+            <!-- Dynamic puzzle content from puzzles.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Investigation Notebook Modal -->
+    <div id="notebook-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-large h-[85vh]">
+        <div class="modal-header">
+          <h3 class="modal-title">ECHOES Investigation Notebook</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE (ESC)</button>
+        </div>
+        <div id="notebook-content" class="modal-body flex-1 overflow-hidden p-4">
+          <!-- Dynamic notebook rendered via notebook.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Evidence Detail Zoom Modal -->
+    <div id="evidence-detail-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span id="evidence-detail-category" class="text-[10px] font-mono text-teal-400 uppercase">DOCUMENT</span>
+            <h3 id="evidence-detail-title" class="text-sm font-bold text-slate-100">Item Title</h3>
+          </div>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; BACK</button>
+        </div>
+        <div class="modal-body">
+          <div id="evidence-detail-room" class="text-[11px] font-mono text-slate-400 mb-2">Location: Security Office</div>
+          <p id="evidence-detail-desc" class="text-xs text-slate-300 leading-relaxed mb-3"></p>
+          <div id="evidence-detail-quote" class="text-xs text-amber-200/90 italic p-3 bg-slate-950 border-l-2 border-teal-500 rounded hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Facility Map Modal -->
+    <div id="facility-map-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title">Astraea Facility Floor Plan</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE</button>
+        </div>
+        <div class="modal-body">
+          <p class="text-xs text-slate-400 mb-4">Click any unlocked room to navigate through the sector corridors:</p>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="p-3 bg-slate-900 border border-slate-700 hover:border-teal-500 rounded text-left" data-map-room="SECURITY_OFFICE">
+              <div class="text-[10px] font-mono text-teal-400">SECTOR 07</div>
+              <div class="text-xs font-bold text-slate-200">Security Office</div>
+              <div class="text-[11px] text-slate-400">Shift terminals, clock, locked drawer</div>
+            </button>
+            <button type="button" class="p-3 bg-slate-900 border border-slate-700 hover:border-teal-500 rounded text-left" data-map-room="RESEARCH_LAB">
+              <div class="text-[10px] font-mono text-teal-400">SECTOR 04</div>
+              <div class="text-xs font-bold text-slate-200">Research Laboratory</div>
+              <div class="text-[11px] text-slate-400">Resonance machine, isotope specimens</div>
+            </button>
+            <button type="button" class="p-3 bg-slate-900 border border-slate-700 hover:border-teal-500 rounded text-left" data-map-room="ARCHIVE_ROOM">
+              <div class="text-[10px] font-mono text-teal-400">SECTOR 03</div>
+              <div class="text-xs font-bold text-slate-200">Archive Room</div>
+              <div class="text-[11px] text-slate-400">Classified dossiers, UV desk, safe</div>
+            </button>
+            <button type="button" class="p-3 bg-slate-900 border border-slate-700 hover:border-teal-500 rounded text-left" data-map-room="OBSERVATION_CORRIDOR">
+              <div class="text-[10px] font-mono text-teal-400">TRANSIT SPINE</div>
+              <div class="text-xs font-bold text-slate-200">Observation Corridor</div>
+              <div class="text-[11px] text-slate-400">Blast window, temporal shadows</div>
+            </button>
+          </div>
+
+          <div class="mt-3">
+            <button type="button" class="w-full p-3 bg-slate-900 border border-slate-700 hover:border-teal-500 rounded text-left" data-map-room="CONTROL_ROOM">
+              <div class="text-[10px] font-mono text-teal-400">SECTOR 01 — INNER SANCTUM</div>
+              <div class="text-xs font-bold text-slate-200">Control Room (Timeline Core)</div>
+              <div class="text-[11px] text-slate-400">Timeline sequencer, manual SCRAM lever</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Ending Resolution Choice Modal -->
+    <div id="ending-choice-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog modal-dialog-large">
+        <div class="modal-header">
+          <h3 class="modal-title">Central Timeline Resolution Interface</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CANCEL</button>
+        </div>
+        <div class="modal-body space-y-3">
+          <p class="text-xs text-slate-300">
+            The timeline sequence is verified. How will you resolve the temporal recursion at Astraea Annex 4?
+          </p>
+
+          <!-- Ending Option 1 -->
+          <label class="block p-3 bg-slate-900 border border-slate-700 hover:border-slate-500 rounded cursor-pointer">
+            <div class="flex items-center gap-2 mb-1">
+              <input type="radio" name="ending_selection" value="BREAK_THE_LOOP" checked class="accent-teal-500" />
+              <span class="text-xs font-bold text-slate-200">Ending 1 — Break The Loop (Manual SCRAM)</span>
+            </div>
+            <p class="text-xs text-slate-400 ml-5">
+              Pull the mechanical core dampeners. The recursive field fractures and you escape into the morning light, but the research records incinerate in ash.
+            </p>
+          </label>
+
+          <!-- Ending Option 2 -->
+          <label class="block p-3 bg-slate-900 border border-slate-700 hover:border-slate-500 rounded cursor-pointer">
+            <div class="flex items-center gap-2 mb-1">
+              <input type="radio" name="ending_selection" value="PRESERVE_THE_MEMORY" class="accent-teal-500" />
+              <span class="text-xs font-bold text-slate-200">Ending 2 — Preserve The Memory (Orbital Broadcast)</span>
+            </div>
+            <p class="text-xs text-slate-400 ml-5">
+              Transmit the full 10-year research archive to an orbital relay so humanity learns the truth, but your own consciousness drifts into chronometric static.
+            </p>
+          </label>
+
+          <!-- Ending Option 3 (Secret) -->
+          <label id="ending-option-3-wrapper" class="block p-3 bg-slate-900 border border-teal-800 rounded cursor-pointer opacity-40">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <div class="flex items-center gap-2">
+                <input type="radio" name="ending_selection" value="THE_FINAL_ECHO" id="ending-choice-3" disabled class="accent-teal-500" />
+                <span class="text-xs font-bold text-teal-300">Ending 3 — The Final Echo (Harmonic Synchronization)</span>
+              </div>
+              <span id="ending-3-badge" class="text-[10px] font-mono text-slate-500">[SECRET ENDING LOCKED]</span>
+            </div>
+            <p class="text-xs text-slate-400 ml-5">
+              Tune the chrono-resonance coils to 432.8 Hz at the microsecond of 09:47:12. The paradox resolves peacefully, saving the facility and Dr. Evelyn Vane!
+            </p>
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-close px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">
+            Cancel
+          </button>
+          <button type="button" id="btn-execute-ending" class="px-4 py-1.5 text-xs bg-teal-600 hover:bg-teal-500 text-white font-bold rounded">
+            Execute Timeline Directive
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Loop Reset Transition Overlay -->
+    <div id="loop-transition-overlay" class="hidden">
+      <div class="text-center font-mono space-y-2">
+        <div class="text-amber-400 text-sm tracking-widest animate-pulse">09:47:12 AM — SPACETIME RECURSION COLLAPSE</div>
+        <div class="text-xs text-slate-400">Rebuilding temporal coordinate matrix...</div>
+      </div>
+    </div>
+
+    <!-- 8. Loop Reset Debrief Modal -->
+    <div id="loop-debrief-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="debrief-loop-title" class="modal-title">Loop Initiated</h3>
+        </div>
+        <div class="modal-body space-y-3">
+          <p id="debrief-narrative" class="text-xs text-slate-300 leading-relaxed italic p-3 bg-slate-950 border-l-2 border-teal-500 rounded">
+            <!-- Debrief text from loopService.js -->
+          </p>
+          <div class="pt-2">
+            <div class="text-[11px] font-mono text-slate-400 uppercase mb-1">Environmental Anomalies Noted:</div>
+            <ul id="debrief-changes-list" class="space-y-1"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-debrief-continue" class="px-4 py-1.5 text-xs bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded">
+            Resume Investigation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Pause Overlay -->
+    <div id="pause-overlay" class="modal-backdrop hidden">
+      <div class="text-center p-6 bg-slate-950 border border-slate-800 rounded-lg max-w-sm">
+        <div class="text-lg font-bold text-slate-100 mb-2 font-mono">INVESTIGATION PAUSED</div>
+        <p class="text-xs text-slate-400 mb-4">
+          The 10-minute timeline is frozen. Accessibility & testing mode active.
+        </p>
+        <button type="button" id="btn-resume-overlay" class="px-4 py-2 text-xs bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded">
+          Resume Investigation (Space)
+        </button>
+      </div>
+    </div>
+
+    <!-- 10. Confirmation Modals -->
+    <div id="confirm-new-game-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog max-w-sm">
+        <div class="modal-header">
+          <h3 class="modal-title">Start New Investigation?</h3>
+        </div>
+        <div class="modal-body">
+          <p class="text-xs text-slate-300">
+            An existing investigation is currently saved. Starting a new investigation will overwrite your collected evidence and loop progress.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-close px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">
+            Cancel
+          </button>
+          <button type="button" id="btn-confirm-new-yes" class="px-3 py-1.5 text-xs bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded">
+            Overwrite & Start Fresh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirm-reset-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog max-w-sm">
+        <div class="modal-header">
+          <h3 class="modal-title">Force Loop Reset?</h3>
+        </div>
+        <div class="modal-body">
+          <p class="text-xs text-slate-300">
+            Triggering an immediate temporal collapse will return you to 09:47:12 AM in the Security Office. All permanent evidence and solved puzzles will be retained.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-close px-3 py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">
+            Cancel
+          </button>
+          <button type="button" id="btn-confirm-reset-yes" class="px-3 py-1.5 text-xs bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded">
+            Trigger Collapse
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. How to Play Modal -->
+    <div id="how-to-play-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title">How to Play — Project ECHOES</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE</button>
+        </div>
+        <div class="modal-body space-y-3 text-xs text-slate-300 leading-relaxed">
+          <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">
+            <span class="font-bold text-teal-300">1. The 10-Minute Timeline:</span>
+            <p class="mt-0.5 text-slate-400">You are trapped inside Astraea Annex 4 where the same 10 minutes repeat endlessly. When the timer hits 00:00, spacetime collapses and the loop resets.</p>
+          </div>
+          <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">
+            <span class="font-bold text-teal-300">2. Persistent Notebook:</span>
+            <p class="mt-0.5 text-slate-400">All collected documents, codes, and puzzle solutions survive the loop reset. What you learn in Loop 1 remains recorded in Loop 2, 3, and beyond!</p>
+          </div>
+          <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">
+            <span class="font-bold text-teal-300">3. Environmental Evolution:</span>
+            <p class="mt-0.5 text-slate-400">Subsequent loops reveal new environmental clues—such as a temporal shadow reflection on the corridor glass and decrypted lab safe files.</p>
+          </div>
+          <div class="p-2.5 bg-slate-900 border border-slate-800 rounded">
+            <span class="font-bold text-teal-300">4. Three Distinct Endings:</span>
+            <p class="mt-0.5 text-slate-400">Solve the 4 interconnected puzzles to reach the Control Room. Choose between breaking the loop, broadcasting the archive, or unlocking the secret harmonic synchronization ending.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Credits Modal -->
+    <div id="credits-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog max-w-sm">
+        <div class="modal-header">
+          <h3 class="modal-title">Project Credits</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE</button>
+        </div>
+        <div class="modal-body text-xs text-slate-300 space-y-2">
+          <p class="font-semibold text-slate-100">ECHOES — The Time-Loop Mystery</p>
+          <p class="text-slate-400">Developed as an original computer engineering student project exploring interactive state machines, client-server web architecture, and narrative game design.</p>
+          <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+            <div>Technologies: Java Standard Edition, Vanilla JavaScript, Semantic HTML5, Custom CSS3.</div>
+            <div class="mt-1">Zero external game engines, AI APIs, or CSS frameworks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. Backend Connection Modal -->
+    <div id="backend-modal" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title">Architecture & Backend Connection</h3>
+          <button type="button" class="modal-close text-slate-400 hover:text-slate-100 text-sm font-mono">&times; CLOSE</button>
+        </div>
+        <div class="modal-body text-xs text-slate-300 space-y-3 leading-relaxed">
+          <p>
+            Project ECHOES features a dual-mode system architecture:
+          </p>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+            <div class="font-bold text-teal-300 mb-1">Local Java Backend Server (port 8080):</div>
+            <p class="text-slate-400">The authoritative Java backend (<code class="text-slate-200">GameServer.java</code>) runs locally using standard JDK HTTP Server. To compile and run:</p>
+            <pre class="bg-black/60 p-2 rounded text-[11px] font-mono text-emerald-400 mt-1">javac -d bin backend/src/*.java
+java -cp bin echoes.GameServer 8080</pre>
+          </div>
+          <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+            <div class="font-bold text-sky-300 mb-1">Web Preview Mode (In-Browser Engine):</div>
+            <p class="text-slate-400">When running inside online sandboxes or without Java installed, the game automatically operates via the built-in local engine (<code class="text-slate-200">engine.js</code>) with 100% identical state progression, timer, puzzles, and multiple endings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

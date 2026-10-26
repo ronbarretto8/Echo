@@ -1,0 +1,157 @@
+{
+  "facilityName": "Astraea Chrono-Dynamics Annex 4",
+  "loopDurationSeconds": 600,
+  "incidentTimestamp": "09:47:12 AM",
+  "characters": [
+    {
+      "id": "CHAR_EVELYN_VANE",
+      "name": "Dr. Evelyn Vane",
+      "role": "Lead Temporal Physicist",
+      "bio": "Brilliant quantum researcher who spearheaded Project CHRONOS. Accused of sabotage in initial security reports, but her personal audio journals reveal a desperate attempt to stop military weaponization.",
+      "contradictionNote": "Early terminal memos claim Dr. Vane cut power to destroy data. Later transcripts prove she cut power to save the staff from eternal temporal disintegration."
+    },
+    {
+      "id": "CHAR_ARTHUR_STERLING",
+      "name": "Dr. Arthur Sterling",
+      "role": "Annex Director & Overseer",
+      "bio": "Obsessive visionary who believed human consciousness could be preserved within an endless recursive temporal loop to cheat death and failure.",
+      "contradictionNote": "Presented himself as a calm protector whose experiment went wrong, but concealed the fact that he intentionally locked the facility inside this 10-minute recursion."
+    },
+    {
+      "id": "CHAR_MARCUS_REYES",
+      "name": "Chief Marcus Reyes",
+      "role": "Chief of Facility Security",
+      "bio": "Veteran guard who noted anomalous Deja-vu symptoms among the crew weeks prior to the catastrophic lock."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EVID_CLOCK_ANOMALY",
+      "title": "Frozen Dial Mechanism",
+      "category": "OBSERVATION",
+      "room": "SECURITY_OFFICE",
+      "description": "The wall clock is locked at 09:47:12. The hands shudder microscopically backwards every second.",
+      "quote": "Time didn't stop. It's vibrating in place like a plucked wire.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_GUARD_LOG",
+      "title": "Guard Shift Log (Oct 26)",
+      "category": "DOCUMENT",
+      "room": "SECURITY_OFFICE",
+      "description": "Duty register noted by Chief Reyes. Highlights strange temporal shifts and contains shift locker memo.",
+      "quote": "09:40 - Dr. Vane rushed past holding magnetic drives. Dr. Sterling ordered lockdown at 09:45. Shift locker code mirrored from incident minute + sector 7.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_KEYCARD_ALPHA",
+      "title": "Keycard Alpha & Tape 01",
+      "category": "OBJECT",
+      "room": "SECURITY_OFFICE",
+      "description": "Magnetic security pass retrieved from the locked drawer, alongside Dr. Sterling's audio log.",
+      "quote": "Sterling Audio: 'If the loop holds, we have achieved immortality. Ten minutes of perfection, repeated forever.'",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_VANE_LAB_NOTE",
+      "title": "Dr. Vane's Lab Notes",
+      "category": "RESEARCH_NOTE",
+      "room": "RESEARCH_LAB",
+      "description": "Handwritten scrawl pinned to the resonance console with chemical formulas and safety warnings.",
+      "quote": "Calibrate containment in atomic half-life order: Chronite-Alpha -> Flux-Gamma -> Tachyon-Beta. Sterling wants to overclock it. He is out of his mind.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_RESONANCE_DATA",
+      "title": "Resonance Stabilization Telemetry",
+      "category": "RESEARCH_NOTE",
+      "room": "RESEARCH_LAB",
+      "description": "Calibrated data logs confirming the corridor blast door interlock frequency has unlocked.",
+      "quote": "Field harmonic stable at 432.8 Hz. Blast bulkhead magnetic clamp disengaged.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_MISSING_DOSSIER_TAG",
+      "title": "Empty Dossier Slot #84",
+      "category": "DOCUMENT",
+      "room": "ARCHIVE_ROOM",
+      "description": "A dust-free gap in the archive shelves labeled 'ASTRA Incident 84-2: Recursive Trajectory Modeling'.",
+      "quote": "The folder was recently moved to the heavy security safe on the north wall.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_UV_MICROFILM",
+      "title": "UV-Revealed Terminal Coordinates",
+      "category": "CODE",
+      "room": "ARCHIVE_ROOM",
+      "description": "Invisible ink markings illuminated under the archival desk's ultraviolet inspection bulb.",
+      "quote": "Safe authorization sequence: Combine research branch prefix [ASTRA] with file index [842] -> ASTRA-842.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_STERLING_CONFESSION",
+      "title": "Classified Project Directive #84",
+      "category": "DOCUMENT",
+      "room": "ARCHIVE_ROOM",
+      "description": "Classified report showing Dr. Sterling intentionally disabled the safety dampener before 09:47.",
+      "quote": "'In the event of funding termination, Directive 84 dictates temporal recursion initiation. We will never be shut down.'",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_ECHO_REFLECTION",
+      "title": "Corridor Temporal Shadow",
+      "category": "OBSERVATION",
+      "room": "OBSERVATION_CORRIDOR",
+      "description": "Looking into the reinforced glass window, you see your own reflection lagging by several seconds, pointing toward the ceiling conduit.",
+      "quote": "The reflection mouths words: 'Loop 14 was not the first. Look deeper into the core console.'",
+      "isSecret": true
+    },
+    {
+      "id": "EVID_CORRIDOR_KEYPAD_CODE",
+      "title": "Observation Bulkhead Keycode",
+      "category": "CODE",
+      "room": "OBSERVATION_CORRIDOR",
+      "description": "Electronic biometric door separating the corridor from the inner Control Room.",
+      "quote": "Keypad interlock responds to Keycard Alpha or manual bypass.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_CHRONOS_KEY",
+      "title": "Reconstructed Incident Timeline",
+      "category": "DOCUMENT",
+      "room": "CONTROL_ROOM",
+      "description": "The verified chronological order of the 5 events that fractured the facility's spacetime continuum.",
+      "quote": "Sequence locked: Initiation -> Power Surge -> Sterling Override -> Vane Scram -> Field Collapse.",
+      "isSecret": false
+    },
+    {
+      "id": "EVID_SECRET_CONCORDANCE",
+      "title": "Dr. Vane's Final Unsent Transmission",
+      "category": "TRANSCRIPT",
+      "room": "CONTROL_ROOM",
+      "description": "An encrypted audio reel recovered from the emergency sub-channel. Requires temporal resonance synchronization.",
+      "quote": "'If anyone out there remembers this loop, you don't have to destroy the facility or sacrifice yourself. Synchronize the harmonic phase at 09:47:12. We can all wake up.'",
+      "isSecret": true
+    }
+  ],
+  "endings": {
+    "ENDING_1": {
+      "id": "BREAK_THE_LOOP",
+      "title": "Ending 1 — Break The Loop",
+      "subtitle": "Severing Spacetime",
+      "narrative": "You reach for the manual SCRAM lever and force the dampener rods into the core. Spacetime shudders violently as the recursive field collapses. Alarms wail, and the blinding distortion vanishes. Outside the facility window, the grey sky moves forward for the first time in years. You walk out into the cold morning air, free from the endless cycle. Yet behind you, the facility's mainframe incinerates, burying the true story of what occurred here forever."
+    },
+    "ENDING_2": {
+      "id": "PRESERVE_THE_MEMORY",
+      "title": "Ending 2 — Preserve The Memory",
+      "subtitle": "The Archive in the Stars",
+      "narrative": "Instead of an immediate shutdown, you connect the archive transponder to the high-gain dish. Every audio log, scientific breakthrough, and confession of Dr. Sterling and Dr. Vane is beamed to an open orbital relay. The world will know the truth. But maintaining the uplink burns through the final safety buffer. The loop breaks, but you find your own consciousness permanently intertwined with the facility's data echoes."
+    },
+    "ENDING_3": {
+      "id": "THE_FINAL_ECHO",
+      "title": "Ending 3 — The Final Echo (Secret Ending)",
+      "subtitle": "Harmonic Synchronization",
+      "narrative": "Having assembled every piece of the puzzle—the temporal reflection in the corridor, Evelyn's secret transmission, and Sterling's classified directive—you do not destroy the core. Instead, you synchronize the resonance coils to 432.8 Hz at the exact microsecond of 09:47:12. The temporal waveform inverts smoothly. The loop does not shatter; it heals. In the quiet control room, footsteps echo. Dr. Evelyn Vane opens the bulkhead door, blinking in disbelief. 'You solved it,' she whispers. The paradox is resolved, and tomorrow begins."
+    }
+  }
+}
